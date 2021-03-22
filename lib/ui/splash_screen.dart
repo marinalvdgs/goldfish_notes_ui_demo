@@ -17,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
   Animation<Offset> littleFishAnimation;
   Animation<Offset> bubbleAnimation;
   Animation<double> opacityAnimation;
+  Animation<double> logoAnimation;
 
   @override
   initState() {
@@ -33,6 +34,9 @@ class _SplashScreenState extends State<SplashScreen>
         .animate(CurvedAnimation(parent: fishController, curve: Curves.linear));
     opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
         CurvedAnimation(parent: fishController, curve: Curves.easeOut));
+    logoAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: fishController,
+        curve: Interval(0.5, 0.7, curve: Curves.easeIn)));
     super.initState();
   }
 
@@ -43,32 +47,35 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Widget buildLogo() {
-    return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 7),
-      child: RotatedBox(
-        quarterTurns: 1,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            border: Border.all(color: Colors.white, width: 3),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: RichText(
-              text: TextSpan(
-                  text: 'NOTES',
-                  style: TextStyle(
-                      color: Colors.white, fontSize: 10, letterSpacing: 15.0),
-                  children: [
-                    TextSpan(
-                        text: '\nGoldFish',
-                        style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 3,
-                          fontSize: 20,
-                          height: 1,
-                        ))
-                  ]),
+    return FadeTransition(
+      opacity: logoAnimation,
+      child: Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 7),
+        child: RotatedBox(
+          quarterTurns: 1,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              border: Border.all(color: Colors.white, width: 3),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: RichText(
+                text: TextSpan(
+                    text: 'NOTES',
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 10, letterSpacing: 15.0),
+                    children: [
+                      TextSpan(
+                          text: '\nGoldFish',
+                          style: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: 3,
+                            fontSize: 20,
+                            height: 1,
+                          ))
+                    ]),
+              ),
             ),
           ),
         ),
