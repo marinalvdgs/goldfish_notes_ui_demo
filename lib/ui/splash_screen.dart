@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:goldfish_notes_ui_demo/ui/home_screen.dart';
 
 const String fish = 'assets/goldfish.png';
-const Duration splashDuration = Duration(seconds: 3);
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -23,7 +22,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   initState() {
-    fishController = AnimationController(duration: splashDuration, vsync: this);
+    fishController =
+        AnimationController(duration: Duration(seconds: 5), vsync: this);
     bigFishAnimation =
         Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset(0.0, 1.0)).animate(
             CurvedAnimation(parent: fishController, curve: Curves.slowMiddle));
@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
         parent: fishController,
         curve: Interval(0.5, 0.7, curve: Curves.easeIn)));
     Timer(
-        Duration(seconds: 2, milliseconds: 300),
+        Duration(seconds:4, milliseconds: 300),
         () => Navigator.of(context).pushReplacement(
               PageRouteBuilder(
                 pageBuilder: (c, a1, a2) => HomeScreen(),
@@ -149,10 +149,10 @@ class _SplashScreenState extends State<SplashScreen>
       shaderCallback: (Rect bounds) {
         return LinearGradient(
           colors: [
-            Color(0xFF9FD5B1).withOpacity(0.4),
-            Color(0xFF42C694).withOpacity(0.4),
-            Color(0xFF119A52).withOpacity(0.4),
-            Color(0xFF0B6243).withOpacity(0.4),
+            Color(0x669FD5B1),
+            Color(0x6642C694),
+            Color(0x66119A52),
+            Color(0x660B6243),
           ],
           transform: GradientRotation(pi / 4),
         ).createShader(bounds);
