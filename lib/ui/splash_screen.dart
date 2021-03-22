@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:goldfish_notes_ui_demo/ui/home_screen.dart';
 
 const String fish = 'assets/goldfish.png';
 const Duration splashDuration = Duration(seconds: 3);
@@ -21,8 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   initState() {
-    fishController = AnimationController(duration: splashDuration, vsync: this)
-      ..repeat();
+    fishController = AnimationController(duration: splashDuration, vsync: this);
     bigFishAnimation =
         Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset(0.0, 1.0)).animate(
             CurvedAnimation(parent: fishController, curve: Curves.slowMiddle));
@@ -37,6 +38,16 @@ class _SplashScreenState extends State<SplashScreen>
     logoAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: fishController,
         curve: Interval(0.5, 0.7, curve: Curves.easeIn)));
+    Timer(
+        Duration(seconds: 2, milliseconds: 300),
+        () => Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => HomeScreen(),
+                transitionsBuilder: (c, anim, a2, child) =>
+                    FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 700),
+              ),
+            ));
     super.initState();
   }
 
@@ -186,6 +197,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    fishController.forward();
     return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
