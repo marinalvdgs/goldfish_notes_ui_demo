@@ -29,9 +29,9 @@ class _SplashScreenState extends State<SplashScreen>
             begin: Offset(-0.25, -1.0), end: Offset(-0.25, 1.0))
         .animate(CurvedAnimation(parent: fishController, curve: Curves.easeIn));
     bubbleAnimation = Tween<Offset>(
-            begin: Offset(0.0, 1.0), end: Offset(0.0, -0.75))
+            begin: Offset(0.0, 1.0), end: Offset(0.0, -0.85))
         .animate(CurvedAnimation(parent: fishController, curve: Curves.linear));
-    opacityAnimation = Tween<double>(begin: 0.8, end: 0.0).animate(
+    opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
         CurvedAnimation(parent: fishController, curve: Curves.easeOut));
     super.initState();
   }
@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(50)),
-            border: Border.all(color: Colors.white, width: 2),
+            border: Border.all(color: Colors.white, width: 3),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -126,6 +126,26 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  Widget buildSeaweed() {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return LinearGradient(
+          colors: [
+            Color(0xFF9FD5B1).withOpacity(0.4),
+            Color(0xFF42C694).withOpacity(0.4),
+            Color(0xFF119A52).withOpacity(0.4),
+            Color(0xFF0B6243).withOpacity(0.4),
+          ],
+          transform: GradientRotation(pi / 4),
+        ).createShader(bounds);
+      },
+      child: Image.asset(
+        'assets/seaweed.png',
+        height: MediaQuery.of(context).size.height * 0.65,
+      ),
+    );
+  }
+
   List<Widget> buildRightBubbles(double width) {
     return [
       Positioned(
@@ -164,7 +184,6 @@ class _SplashScreenState extends State<SplashScreen>
           gradient: LinearGradient(
             colors: [
               Color(0xFF42C694),
-              //Color(0xFF119A52),
               Color(0xFF0B6243),
               Color(0xFF021817),
             ],
@@ -174,6 +193,17 @@ class _SplashScreenState extends State<SplashScreen>
         child: Stack(
           children: [
             buildAnimatedChild(littleFishAnimation, buildLittleFish()),
+            Positioned(
+                bottom: -40,
+                right: -210,
+                child: Transform.scale(scale: 1.25, child: buildSeaweed())),
+            Positioned(
+                bottom: -80,
+                left: -180,
+                child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(pi),
+                    child: buildSeaweed())),
             ...buildRightBubbles(width),
             ...buildLeftBubbles(width),
             buildAnimatedChild(bigFishAnimation, buildBigFish()),
