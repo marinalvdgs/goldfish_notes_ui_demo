@@ -15,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen>
   AnimationController fishController;
   Animation<Offset> bigFishAnimation;
   Animation<Offset> littleFishAnimation;
+  Animation<Offset> bubbleAnimation;
   Animation<double> opacityAnimation;
 
   @override
@@ -27,6 +28,9 @@ class _SplashScreenState extends State<SplashScreen>
     littleFishAnimation = Tween<Offset>(
             begin: Offset(-0.25, -1.0), end: Offset(-0.25, 1.0))
         .animate(CurvedAnimation(parent: fishController, curve: Curves.easeIn));
+    bubbleAnimation = Tween<Offset>(
+            begin: Offset(0.0, 1.0), end: Offset(0.0, -0.75))
+        .animate(CurvedAnimation(parent: fishController, curve: Curves.linear));
     opacityAnimation = Tween<double>(begin: 0.8, end: 0.0).animate(
         CurvedAnimation(parent: fishController, curve: Curves.easeOut));
     super.initState();
@@ -72,6 +76,19 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  Widget buildBubble() {
+    return FittedBox(
+      fit: BoxFit.none,
+      child: FadeTransition(
+        opacity: opacityAnimation,
+        child: Image.asset(
+          'assets/bubble.png',
+          height: 20,
+        ),
+      ),
+    );
+  }
+
   Widget buildBigFish() {
     return FittedBox(
       fit: BoxFit.none,
@@ -101,8 +118,47 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  Widget buildAnimatedChild(Animation<Offset> animation, Widget child) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: SlideTransition(position: animation, child: child),
+    );
+  }
+
+  List<Widget> buildRightBubbles(double width) {
+    return [
+      Positioned(
+          bottom: 0,
+          right: -width / 4 - 10,
+          child: buildAnimatedChild(bubbleAnimation, buildBubble())),
+      Positioned(
+          bottom: -40,
+          right: -width / 4,
+          child: buildAnimatedChild(bubbleAnimation, buildBubble()))
+    ];
+  }
+
+  List<Widget> buildLeftBubbles(double width) {
+    return [
+      Positioned(
+          bottom: -130,
+          right: width / 4,
+          child: buildAnimatedChild(bubbleAnimation, buildBubble())),
+      Positioned(
+          bottom: -170,
+          right: width / 4 - 20,
+          child: buildAnimatedChild(bubbleAnimation, buildBubble())),
+      Positioned(
+          bottom: -190,
+          right: width / 4 + 20,
+          child: buildAnimatedChild(bubbleAnimation, buildBubble()))
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -117,18 +173,10 @@ class _SplashScreenState extends State<SplashScreen>
         ),
         child: Stack(
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: SlideTransition(
-                  position: littleFishAnimation, child: buildLittleFish()),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: SlideTransition(
-                  position: bigFishAnimation, child: buildBigFish()),
-            ),
+            buildAnimatedChild(littleFishAnimation, buildLittleFish()),
+            ...buildRightBubbles(width),
+            ...buildLeftBubbles(width),
+            buildAnimatedChild(bigFishAnimation, buildBigFish()),
             Align(
               alignment: Alignment.topCenter,
               child: buildLogo(),
