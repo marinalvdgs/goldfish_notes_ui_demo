@@ -22,22 +22,17 @@ class CounterPainter extends CustomPainter {
     Paint bgPaint = Paint()
       ..shader = bgGradient
           .createShader(Rect.fromCircle(center: Offset.zero, radius: radius));
-    Paint paint = Paint()
-      ..color = Color(0xffcdece4);
-    Path circle = Path()
-      ..addRect(
-          Rect.fromCircle(center: Offset(centerWidth, 0), radius: radius + 10));
+    Paint paint = Paint()..color = Color(0xffcdece4);
     Path bgPath = Path()
-      ..moveTo(centerWidth - centerWidth / 3, centerHeight+radius-10)
-      ..quadraticBezierTo(centerWidth - 10, size.height, centerWidth - 40,
-          size.height+50)
-      ..lineTo(centerWidth + 40, size.height+50)
+      ..moveTo(centerWidth - centerWidth / 3, centerHeight + radius - 10)
       ..quadraticBezierTo(
-          centerWidth+10, size.height, centerWidth + centerWidth / 3,
-          centerHeight+radius-10)
-      ..lineTo(centerWidth - centerWidth / 3, centerHeight+radius-10);
+          centerWidth - 10, size.height, centerWidth - 45, size.height + 50)
+      ..lineTo(centerWidth + 45, size.height + 50)
+      ..quadraticBezierTo(centerWidth + 10, size.height,
+          centerWidth + centerWidth / 3, centerHeight + radius - 10)
+      ..lineTo(centerWidth - centerWidth / 3, centerHeight + radius - 10);
     canvas.drawPath(bgPath, paint);
-    canvas.drawCircle(Offset(centerWidth, centerHeight), radius+10, paint);
+    canvas.drawCircle(Offset(centerWidth, centerHeight), radius + 10, paint);
     canvas.drawCircle(Offset(centerWidth, centerHeight), radius, bgPaint);
   }
 
