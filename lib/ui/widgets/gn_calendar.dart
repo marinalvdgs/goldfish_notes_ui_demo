@@ -8,9 +8,6 @@ class GNCalendar extends StatefulWidget {
   _GNCalendarState createState() => _GNCalendarState();
 }
 
-const EdgeInsets calendarPadding =
-    EdgeInsets.symmetric(vertical: 24, horizontal: 8);
-
 class _GNCalendarState extends State<GNCalendar>
     with SingleTickerProviderStateMixin {
   DateTime selectedDay = DateTime.now();
@@ -29,6 +26,16 @@ class _GNCalendarState extends State<GNCalendar>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  void onDayTap(DateTime day) {
+    if (!isSameDay(selectedDay, day)) {
+      setState(() {
+        selectedDay = day;
+        _animationController.reset();
+        _animationController.forward();
+      });
+    }
   }
 
   @override
@@ -52,13 +59,7 @@ class _GNCalendarState extends State<GNCalendar>
       selectedDayPredicate: (day) {
         return isSameDay(selectedDay, day);
       },
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          this.selectedDay = selectedDay;
-          _animationController.reset();
-          _animationController.forward();
-        });
-      },
+      onDaySelected: (selectedDay, focusedDay) => onDayTap(selectedDay),
       calendarBuilders: CalendarBuilders(selectedBuilder: (context, date, _) {
         return FadeTransition(
           opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
