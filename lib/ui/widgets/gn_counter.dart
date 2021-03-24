@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:goldfish_notes_ui_demo/ui/widgets/counter_painter.dart';
+import 'package:goldfish_notes_ui_demo/ui/widgets/gn_random_fish.dart';
 
 class GNCounter extends StatefulWidget {
   @override
@@ -88,30 +89,51 @@ class _GNCounterState extends State<GNCounter> {
   @override
   Widget build(BuildContext context) {
     final double radius = MediaQuery.of(context).size.width / 2 - 50;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Stack(
-              children: [
-                CustomPaint(
-                  size: Size(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height / 2),
-                  painter: CounterPainter(radius: radius),
-                ),
-                buildAnimatedCount(),
-              ],
+    final Size size = Size(MediaQuery.of(context).size.width,
+        MediaQuery.of(context).size.height / 2);
+    Random random = Random();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: size,
+                    painter: CounterPainter(radius: radius),
+                  ),
+                  buildAnimatedCount(),
+                  for (int i = 0; i < count; i++)
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: size.height/2-radius),
+                        clipBehavior: Clip.hardEdge,
+                        height: radius*2,
+                        width: radius*2,
+                        decoration:
+                        BoxDecoration(shape: BoxShape.circle),
+                        child: GNRandomFish(
+                          random: random,
+                          size: size,
+                          radius: radius,
+                        ),
+                      ),
+                    )
+                ],
+              ),
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: buildCounterButton(radius),
-        ),
-      ],
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: buildCounterButton(radius),
+          ),
+        ],
+      ),
     );
   }
 }
