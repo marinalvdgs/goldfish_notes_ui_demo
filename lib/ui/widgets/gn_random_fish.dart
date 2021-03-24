@@ -14,28 +14,36 @@ double getStartAngle(
   }
   if (dx1 == max && dx2 == min) {
     if (dy1 <= 0)
-      return 0 + getSweepAngle(dy2, false);
+      return 0 + getSweepAngle(dy2, true);
     else
       return pi / 2 + getSweepAngle(dy2, false);
   }
   if (dy1 == min && dy2 == max) {
     if (dx1 <= 0)
-      return 3 * pi / 2 + getSweepAngle(dx2, false);
+      return 3 * pi / 2 + getSweepAngle(dx2, true);
     else
       return 0 + getSweepAngle(dx2, false);
   }
   if (dy1 == max && dy2 == min) {
     if (dx1 <= 0)
-      return pi + getSweepAngle(dx2, true);
+      return pi + getSweepAngle(dx2, false);
     else
       return pi / 2 + getSweepAngle(dx2, true);
   }
 }
 
-double getSweepAngle(double dy, bool isDy) {
-  if (dy.abs() > 1) dy = 1 - dy.abs();
-  if (isDy) return pi / 2 * (1 + dy);
-  return pi / 2 * dy.abs();
+double getSweepAngle(double shift, bool isNeedToRecalculate) {
+  if (shift.floorToDouble().abs() > 1) {
+    isNeedToRecalculate = false;
+    shift = 1 - shift.abs();
+  }
+  if (isNeedToRecalculate) return pi / 2 * (1 + shift);
+  return pi / 2 * shift.abs();
+}
+
+double roundDouble(double val, int places) {
+  double mod = pow(10.0, places);
+  return ((val * mod).round().toDouble() / mod);
 }
 
 class GNRandomFish extends StatefulWidget {
@@ -68,28 +76,29 @@ class _GNRandomFishState extends State<GNRandomFish>
     randomNum = random.nextDouble();
     opacity = randomNum < 0.1 ? 1.0 : randomNum;
     height = random.nextDouble() * 100 + 25;
-    final double x = widget.radius / widget.size.width / 2 + 0.2;
-    final double y = widget.radius / widget.size.height;
+    final double x = roundDouble(widget.radius / widget.size.width, 1);
+    final double y = roundDouble(widget.radius / widget.size.height, 1);
+
     final candidates = [
       Tween(
-        begin: Offset(random.nextDouble() + 0.2, -y),
-        end: Offset(-random.nextDouble() - 0.2, y),
+        begin: Offset(x + random.nextDouble(), -y),
+        end: Offset(-x - random.nextDouble(), y),
       ),
       Tween(
-        begin: Offset(random.nextDouble() + 0.2, y),
-        end: Offset(-random.nextDouble() - 0.2, -y),
+        begin: Offset(x + random.nextDouble(), y),
+        end: Offset(-x - random.nextDouble(), -y),
       ),
       Tween(
-        begin: Offset(x, random.nextDouble() + 0.2),
-        end: Offset(-x, -random.nextDouble() - 0.2),
+        begin: Offset(x, random.nextDouble() + y),
+        end: Offset(-x, -random.nextDouble() - y),
       ),
       Tween(
-        begin: Offset(-x, random.nextDouble() + 0.2),
-        end: Offset(x, -random.nextDouble() - 0.2),
+        begin: Offset(-x, random.nextDouble() + y),
+        end: Offset(x, -random.nextDouble() - y),
       )
     ];
 
-    var tween = candidates[random.nextInt(candidates.length - 1)];
+    var tween = candidates[random.nextInt(10000) % 4];
     offsetAnimation = tween
         .animate(CurvedAnimation(parent: fishController, curve: Curves.linear));
 
@@ -97,7 +106,7 @@ class _GNRandomFishState extends State<GNRandomFish>
     double a = candidates.indexOf(tween) < 2 ? y : x;
     angle = getStartAngle(
             -a, a, tween.begin.dx, tween.end.dx, tween.begin.dy, tween.end.dy) +
-        pi / 6;
+        pi / 8;
     super.initState();
   }
 
