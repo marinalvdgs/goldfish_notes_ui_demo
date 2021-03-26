@@ -102,6 +102,7 @@ class _GNCalendarState extends State<GNCalendar>
           calendarStyle: CalendarStyle(
             isTodayHighlighted: false,
             defaultTextStyle: TextStyle(fontSize: 16),
+            outsideTextStyle: TextStyle(fontSize: 16),
           ),
           selectedDayPredicate: (day) {
             return isSameDay(selectedDay, day);
