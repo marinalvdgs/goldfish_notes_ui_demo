@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:goldfish_notes_ui_demo/ui/home_screen.dart';
+import 'package:goldfish_notes_ui_demo/ui/widgets/seaweed_image.dart';
 
 const String fish = 'assets/goldfish.png';
 
@@ -39,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen>
         parent: fishController,
         curve: Interval(0.5, 0.7, curve: Curves.easeIn)));
     Timer(
-        Duration(seconds:4, milliseconds: 300),
+        Duration(seconds: 4, milliseconds: 300),
         () => Navigator.of(context).pushReplacement(
               PageRouteBuilder(
                 pageBuilder: (c, a1, a2) => HomeScreen(),
@@ -144,26 +145,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  Widget buildSeaweed() {
-    return ShaderMask(
-      shaderCallback: (Rect bounds) {
-        return LinearGradient(
-          colors: [
-            Color(0x669FD5B1),
-            Color(0x6642C694),
-            Color(0x66119A52),
-            Color(0x660B6243),
-          ],
-          transform: GradientRotation(pi / 4),
-        ).createShader(bounds);
-      },
-      child: Image.asset(
-        'assets/seaweed.png',
-        height: MediaQuery.of(context).size.height * 0.65,
-      ),
-    );
-  }
-
   List<Widget> buildRightBubbles(double width) {
     return [
       Positioned(
@@ -215,14 +196,14 @@ class _SplashScreenState extends State<SplashScreen>
             Positioned(
                 bottom: -40,
                 right: -210,
-                child: Transform.scale(scale: 1.25, child: buildSeaweed())),
+                child: Transform.scale(scale: 1.25, child: SeaweedImage())),
             Positioned(
                 bottom: -80,
                 left: -180,
                 child: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.rotationY(pi),
-                    child: buildSeaweed())),
+                    child: SeaweedImage())),
             ...buildRightBubbles(width),
             ...buildLeftBubbles(width),
             buildAnimatedChild(bigFishAnimation, buildBigFish()),

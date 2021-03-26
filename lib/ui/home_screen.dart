@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goldfish_notes_ui_demo/ui/widgets/gn_calendar.dart';
+import 'package:goldfish_notes_ui_demo/ui/widgets/gn_counter.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Flexible(child: GNCounter()),
           GNCalendar(),
         ],
       ),
