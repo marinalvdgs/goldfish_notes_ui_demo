@@ -16,6 +16,10 @@ const LinearGradient dayGradient = LinearGradient(
 );
 
 class GNCalendar extends StatefulWidget {
+  final Function onDayChange;
+
+  GNCalendar({@required this.onDayChange});
+
   @override
   _GNCalendarState createState() => _GNCalendarState();
 }
@@ -49,6 +53,7 @@ class _GNCalendarState extends State<GNCalendar>
         selectedDay = day;
         _animationController.reset();
         _animationController.forward();
+        widget.onDayChange(selectedDay);
       });
     }
   }
@@ -75,7 +80,7 @@ class _GNCalendarState extends State<GNCalendar>
         borderRadius: BorderRadius.all(Radius.circular(50)),
         child: Material(
           color: Colors.transparent,
-          type: MaterialType.circle,
+          type: MaterialType.button,
           child: InkWell(
             onTap: onDateTap,
             splashColor: Color(0x3342C694),
