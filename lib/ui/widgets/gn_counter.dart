@@ -3,14 +3,39 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:goldfish_notes_ui_demo/ui/widgets/counter_painter.dart';
 import 'package:goldfish_notes_ui_demo/ui/widgets/gn_random_fish.dart';
+import 'package:goldfish_notes_ui_demo/ui/widgets/seaweed_image.dart';
 
 class GNCounter extends StatefulWidget {
   @override
   _GNCounterState createState() => _GNCounterState();
 }
 
-class _GNCounterState extends State<GNCounter> {
+class _GNCounterState extends State<GNCounter>
+    with SingleTickerProviderStateMixin {
+  AnimationController bubbleController;
+  Animation<Offset> bubbleAnimation;
+  Animation<double> fadeAnimation;
   int count = 0;
+
+  @override
+  void initState() {
+    bubbleController =
+        AnimationController(duration: Duration(seconds: 4), vsync: this)
+          ..repeat();
+    bubbleAnimation = Tween<Offset>(
+            begin: Offset(-0.2, 0.7), end: Offset(-0.2, -0.8))
+        .animate(
+            CurvedAnimation(parent: bubbleController, curve: Curves.linear));
+    fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+        CurvedAnimation(parent: bubbleController, curve: Curves.easeIn));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    bubbleController.dispose();
+    super.dispose();
+  }
 
   void onCounterTap() {
     setState(() {
@@ -86,6 +111,57 @@ class _GNCounterState extends State<GNCounter> {
     );
   }
 
+  Widget buildClippedContainer({Widget child, Size size, double radius}) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.only(top: size.height / 2 - radius),
+        clipBehavior: Clip.hardEdge,
+        height: radius * 2,
+        width: radius * 2,
+        decoration: BoxDecoration(shape: BoxShape.circle),
+        child: child,
+      ),
+    );
+  }
+
+  Widget buildBubble({double height = 20}) {
+    return SlideTransition(
+      position: bubbleAnimation,
+      child: FittedBox(
+        fit: BoxFit.none,
+        child: FadeTransition(
+          opacity: fadeAnimation,
+          child: Image.asset(
+            'assets/bubble.png',
+            height: height,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBubbles(Size size, double radius) {
+    return Stack(
+      children: [
+        buildClippedContainer(size: size, radius: radius, child: buildBubble()),
+        buildClippedContainer(
+            size: size,
+            radius: radius,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, top: 32),
+              child: buildBubble(),
+            )),
+        buildClippedContainer(
+            size: size,
+            radius: radius,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0, top: 64),
+              child: buildBubble(),
+            ))
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double radius = MediaQuery.of(context).size.width / 2 - 50;
@@ -108,21 +184,35 @@ class _GNCounterState extends State<GNCounter> {
                     painter: CounterPainter(radius: radius),
                   ),
                   buildAnimatedCount(),
+                  buildClippedContainer(
+                      size: size,
+                      radius: radius,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.only(left: radius + 32, top: radius / 3),
+                        child: buildBubble(height: 12),
+                      )),
+                  buildClippedContainer(
+                      size: size,
+                      radius: radius,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                              bottom: -radius / 2,
+                              right: -radius,
+                              child: SeaweedImage()),
+                        ],
+                      )),
+                  buildBubbles(size, radius),
                   for (int i = 0; i < count; i++)
-                    Center(
-                      child: Container(
-                        margin: EdgeInsets.only(top: size.height/2-radius),
-                        clipBehavior: Clip.hardEdge,
-                        height: radius*2,
-                        width: radius*2,
-                        decoration:
-                        BoxDecoration(shape: BoxShape.circle),
-                        child: GNRandomFish(
-                          random: random,
-                          size: size,
-                          radius: radius,
-                        ),
+                    buildClippedContainer(
+                      child: GNRandomFish(
+                        random: random,
+                        size: size,
+                        radius: radius,
                       ),
+                      radius: radius,
+                      size: size,
                     )
                 ],
               ),

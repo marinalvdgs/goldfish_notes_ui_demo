@@ -7,7 +7,7 @@ const LinearGradient bgGradient = LinearGradient(
     Color(0xFF42C694),
     Color(0xFF0B6243),
   ],
-  transform: GradientRotation(3 * pi / 4),
+  transform: GradientRotation(pi / 2),
 );
 
 class CounterPainter extends CustomPainter {
@@ -20,8 +20,8 @@ class CounterPainter extends CustomPainter {
     final double centerWidth = size.width / 2;
     final double centerHeight = size.height / 2;
     Paint bgPaint = Paint()
-      ..shader = bgGradient
-          .createShader(Rect.fromCircle(center: Offset.zero, radius: radius));
+      ..shader = bgGradient.createShader(Rect.fromCircle(
+          center: Offset(centerWidth, centerHeight), radius: radius));
     Paint paint = Paint()..color = Color(0xffcdece4);
     Path bgPath = Path()
       ..moveTo(centerWidth - centerWidth / 3, centerHeight + radius - 10)

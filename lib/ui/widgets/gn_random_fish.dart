@@ -102,7 +102,6 @@ class _GNRandomFishState extends State<GNRandomFish>
     offsetAnimation = tween
         .animate(CurvedAnimation(parent: fishController, curve: Curves.linear));
 
-    debugPrint('${candidates.indexOf(tween)} ${tween.begin}  ${tween.end}');
     double a = candidates.indexOf(tween) < 2 ? y : x;
     angle = getStartAngle(
             -a, a, tween.begin.dx, tween.end.dx, tween.begin.dy, tween.end.dy) +
