@@ -6,6 +6,8 @@ import 'package:goldfish_notes_ui_demo/ui/widgets/gn_random_fish.dart';
 import 'package:goldfish_notes_ui_demo/ui/widgets/seaweed_image.dart';
 
 class GNCounter extends StatefulWidget {
+  final Function onCountChange;
+  GNCounter({@required this.onCountChange});
   @override
   _GNCounterState createState() => _GNCounterState();
 }
@@ -40,6 +42,7 @@ class _GNCounterState extends State<GNCounter>
   void onCounterTap() {
     setState(() {
       count++;
+      widget.onCountChange();
     });
   }
 

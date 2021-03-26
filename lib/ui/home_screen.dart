@@ -10,10 +10,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime selectedDay = DateTime.now();
+  int count = 0;
 
   void onDayChange(DateTime day) {
     setState(() {
       selectedDay = day;
+    });
+  }
+
+  void onCountChange() {
+    setState(() {
+      count++;
     });
   }
 
@@ -24,13 +31,23 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: 4),
             child: Text(
               '${getWeekDay(selectedDay)}\'s Diary',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
             ),
           ),
-          Flexible(child: GNCounter()),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              '$count diaries',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ),
+          Flexible(
+              child: GNCounter(
+            onCountChange: onCountChange,
+          )),
           GNCalendar(
             onDayChange: onDayChange,
           ),
