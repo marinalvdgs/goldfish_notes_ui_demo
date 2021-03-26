@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:goldfish_notes_ui_demo/utils/utils.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class GNCalendar extends StatefulWidget {
@@ -38,55 +40,104 @@ class _GNCalendarState extends State<GNCalendar>
     }
   }
 
+  String getMonthABBR() {
+    return DateFormat.MMM().format(selectedDay);
+  }
+
+  Widget buildDateBlock() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${selectedDay.day}',
+            style: TextStyle(fontSize: 45),
+          ),
+          SizedBox(
+              height: 50,
+              child: VerticalDivider(
+                thickness: 2,
+                color: Colors.grey.shade300,
+                endIndent: 8,
+                indent: 8,
+              )),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${getWeekDay(selectedDay)}',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              Text(
+                '${getMonthABBR().toUpperCase()} / ${selectedDay.year}',
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TableCalendar(
-      rowHeight: 64,
-      firstDay: DateTime.utc(2010, 10, 16),
-      focusedDay: selectedDay,
-      lastDay: DateTime.utc(2030, 3, 14),
-      headerVisible: false,
-      daysOfWeekVisible: false,
-      pageAnimationDuration: Duration(milliseconds: 300),
-      pageAnimationCurve: Curves.fastLinearToSlowEaseIn,
-      calendarFormat: CalendarFormat.week,
-      weekendDays: [],
-      availableCalendarFormats: {CalendarFormat.week: 'Week'},
-      calendarStyle: CalendarStyle(
-        isTodayHighlighted: false,
-        defaultTextStyle: TextStyle(fontSize: 16),
-      ),
-      selectedDayPredicate: (day) {
-        return isSameDay(selectedDay, day);
-      },
-      onDaySelected: (selectedDay, focusedDay) => onDayTap(selectedDay),
-      calendarBuilders: CalendarBuilders(selectedBuilder: (context, date, _) {
-        return FadeTransition(
-          opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-              parent: _animationController, curve: Curves.easeIn)),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50), topRight: Radius.circular(50)),
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF34EE9A),
-                  Color(0xFF19D1AF),
-                  Color(0xFF02BBBD),
-                ],
-                transform: GradientRotation(pi / 2),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                '${date.day}',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildDateBlock(),
+        TableCalendar(
+          rowHeight: 64,
+          firstDay: DateTime.utc(2010, 10, 16),
+          focusedDay: selectedDay,
+          lastDay: DateTime.utc(2030, 3, 14),
+          headerVisible: false,
+          daysOfWeekVisible: false,
+          pageAnimationDuration: Duration(milliseconds: 300),
+          pageAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          calendarFormat: CalendarFormat.week,
+          weekendDays: [],
+          availableCalendarFormats: {CalendarFormat.week: 'Week'},
+          calendarStyle: CalendarStyle(
+            isTodayHighlighted: false,
+            defaultTextStyle: TextStyle(fontSize: 16),
           ),
-        );
-      }),
+          selectedDayPredicate: (day) {
+            return isSameDay(selectedDay, day);
+          },
+          onDaySelected: (selectedDay, focusedDay) => onDayTap(selectedDay),
+          calendarBuilders:
+              CalendarBuilders(selectedBuilder: (context, date, _) {
+            return FadeTransition(
+              opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                  parent: _animationController, curve: Curves.easeIn)),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50)),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF34EE9A),
+                      Color(0xFF19D1AF),
+                      Color(0xFF02BBBD),
+                    ],
+                    transform: GradientRotation(pi / 2),
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    '${date.day}',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 }
