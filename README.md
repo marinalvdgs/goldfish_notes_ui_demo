@@ -1,17 +1,20 @@
 # goldfish_notes_ui_demo
 
-A new Flutter application.
+This is demo counter app inspired by this [design on Dribbble](https://dribbble.com/shots/5891868-Goldfish-Notes-App).
 
-## Getting Started
+## About
 
-This project is a starting point for a Flutter application.
+My main goal was to implement nice animations. For achieve this I tried to combine various standard Flutter animation widgets, especially [SlideTransition](https://api.flutter.dev/flutter/widgets/SlideTransition-class.html) and [FadeTransition](https://api.flutter.dev/flutter/widgets/FadeTransition-class.html).
 
-A few resources to get you started if this is your first Flutter project:
+I also needed a custom calendar to make it look consistent across the app, so I found this amazing [package](https://pub.dev/packages/table_calendar).
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## How it looks
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# goldfish_notes_ui_demo" 
+### Splash screen
+![splash_screen](splash_screen.gif)
+
+### Counter
+![counter](counter.gif)
+
+## Resources 
+Image - [PNG images](http://pngimg.com/)

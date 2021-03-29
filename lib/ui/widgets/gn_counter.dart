@@ -7,7 +7,9 @@ import 'package:goldfish_notes_ui_demo/ui/widgets/seaweed_image.dart';
 
 class GNCounter extends StatefulWidget {
   final Function onCountChange;
+
   GNCounter({@required this.onCountChange});
+
   @override
   _GNCounterState createState() => _GNCounterState();
 }
@@ -69,7 +71,7 @@ class _GNCounterState extends State<GNCounter>
             transform: GradientRotation(pi / 2),
           ).createShader(bound),
           child: Text(
-            '$count',
+            count < 100 ? '$count' : '99+',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 150,
@@ -207,7 +209,7 @@ class _GNCounterState extends State<GNCounter>
                         ],
                       )),
                   buildBubbles(size, radius),
-                  for (int i = 0; i < count; i++)
+                  for (int i = 0; i < count && i < 100; i++)
                     buildClippedContainer(
                       child: GNRandomFish(
                         random: random,
